@@ -9,7 +9,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://RyanPersson.github.io/additive-manufacturing/",
+
   "author": "Chris Pillion",
   "license": "ISC",
   "devDependencies": {
