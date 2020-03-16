@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Add the Bootstrap CDN for some simple styling -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+
+
+  <!-- Include the HOOPS web viewer client source -->
+  <script type="text/javascript" src="src/hoops/hoops_web_viewer.js"></script>
+
+  <!-- Making the viewer globally available for debug purposes -->
+  <script>       var app;     </script>
+
+  <!-- Include the Webpack bundled result of our written source code -->
+  <script src="build/bundle.js"></script>
+
+  <title>Workflow Tutorial: Additive Manufacturing</title>
+</head>
+
+<body>
+  <!-- Header Component w/ TS3D images -->
+  <header id="logo-head" class="comp-container">
+    <div id="ts3dlogo">
+      <img src="img/ts3d_logo.png" alt="logo" />
+    </div>
+    <div id="hclogo">
+      <img src="img/hc.png" alt="hcLogo" />
+    </div>
+  </header>
+
+  <!-- Main Viewer Component w/ Interaction -->
+  <div id="canvas" class="comp-container">
+    <div id="viewer"></div>
+    <div id="viewer-label" class="comp-label">Main View</div>
+  </div>
+
+  <!-- Overhead Viewer Component for a Top-Down View -->
+  <div id="subcanvas" class="comp-container">
+    <div id="subviewer"></div>
+    <div id="subviewer-label" class="comp-label">Overhead View</div>
+  </div>
+
+  <!-- Inspector Component for General Information and Operators -->
+  <div id="inspector" class="comp-container">
+    <div id="inspector-label" class="comp-label">Inspector</div>
+
+    <!-- Information Fields -->
+    <div id="inspector-info">
+      <!-- General Model Info -->
+      <div id="model-info" class="info-text-cat">
+        <p>Model Information</p>
+        <div id="model-info-keys">
+          <p>Model File Name:</p>
+          <p>Native File Type:</p>
+        </div>
+        <div id="model-info-values">
+          <p id="model-file-name">--</p>
+          <p id="model-file-type">--</p>
+        </div>
+      </div>
+      <!-- Node Specific Info -->
+      <div id="node-info" class="info-text-cat">
+        <p>Node Information</p>
+        <div id="node-info-keys">
+          <p>Node Name:</p>
+          <p>Node ID: </p>
+          <p>Node Net Matrix:</p>
+        </div>
+        <div id="node-info-values">
+          <p id="node-name">--</p>
+          <p id="node-id">--</p>
+          <div id="matrix-output">
+            <table border="1" cellpadding="5">
+              <tr>
+                <th scope="col">-</th>
+                <th scope="col">X</th>
+                <th scope="col">Y</th>
+                <th scope="col">Z</th>
+                <th scope="col">W</th>
+              </tr>
+              <tr>
+                <th scope="row">X</th>
+                <td id="m11">0.0</td>
+                <td id="m12">0.0</td>
+                <td id="m13">0.0</td>
+                <td id="m14">0.0</td>
+              </tr>
+              <tr>
+                <th scope="row">Y</th>
+                <td id="m21">0.0</td>
+                <td id="m22">0.0</td>
+                <td id="m23">0.0</td>
+                <td id="m24">0.0</td>
+              </tr>
+              <tr>
+                <th scope="row">Z</th>
+                <td id="m31">0.0</td>
+                <td id="m32">0.0</td>
+                <td id="m33">0.0</td>
+                <td id="m34">0.0</td>
+              </tr>
+              <tr>
+                <th scope="row">W</th>
+                <td id="m41">0.0</td>
+                <td id="m42">0.0</td>
+                <td id="m43">0.0</td>
+                <td id="m44">0.0</td>
+              </tr>
+            </table>
+          </div> <!-- End Matrix Output -->
+        </div> <!-- End Node Info Values -->
+      </div> <!-- End Node Specific Info -->
+    </div> <!-- End Info Fields -->
+
+    <!-- Application Specific Operator Buttons -->
+    <div id="inspector-buttons">
+      <button id="handles-button" type="button"  class="btn btn-primary btn-sm button-row">Show Handles</button>
+      <button id="instance-button" type="button"  class="btn btn-primary btn-sm button-row">Instance Part</button>
+      <button id="arrange-button" type="button" class="btn btn-primary btn-sm button-row">Auto-Arrange</button>
+    </div>
+  </div> <!-- End Inspector Component -->
+
+  <!-- Model Browser Component -->
+  <div id="model-browser" class="comp-container">
+    <div id="model-browser-label" class="comp-label">Model Browser</div>
+    <div id="model-browser-buttons">
+      <button id="open-model-button" onclick="document.getElementById('file-input').click(); return false;"
+        type="button" class="btn btn-primary btn-sm button-row">Open Model...</button>
+      <input id="file-input" type="file" style="visibility: hidden;"></input>
+    </div>
+    <div id="models-scroller"></div>
+  </div>
+
+</body>
+
+</html>
