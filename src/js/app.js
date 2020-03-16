@@ -108,7 +108,7 @@ class main {
         const nodeName = "Model-" + (modelNum + 1);
         const modelNodeId = viewer.model.createNode(null, nodeName);
         this._modelList.push(modelName);
-        viewer.model.loadSubtreeFromScsFile(modelNodeId, "/data/" + modelName + ".scs")
+        viewer.model.loadSubtreeFromScsFile(modelNodeId, "/additive-manufacturing/data/" + modelName + ".scs")
             .then(() => {
             let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
             viewer.model.getNodeRealBounding(modelNodeId)
@@ -194,7 +194,7 @@ class main {
             modelThumbnail.href = "";
             modelThumbnail.className = "model-thumb";
             modelThumbnail.setAttribute("model", modelname);
-            let imgPath = "/data/thumbnails/" + modelname + ".png";
+            let imgPath = "/additive-manufacturing/data/thumbnails/" + modelname + ".png";
             // Check to see if the selected model has a corresponding thumbnail made
             fetch(imgPath)
                 .then((resp) => {
