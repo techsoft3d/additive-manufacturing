@@ -3,6 +3,8 @@ import transformOperator from "./transformOperator";
 import printingPlane from "./printingPlane";
 import syncHelper from "./syncHelper";
 import '../css/tutorial-transforms.css';
+
+let directoryPath = "/additive-manufacturing";
 // Application logic will begin once DOM content is loaded
 window.onload = () => {
     const app = new main();
@@ -109,7 +111,7 @@ class main {
         const modelNodeId = viewer.model.createNode(null, nodeName);
         this._modelList.push(modelName);
         debugger;
-        viewer.model.loadSubtreeFromScsFile(modelNodeId, "/additive-manufacturing/data/" + modelName + ".scs")
+        viewer.model.loadSubtreeFromScsFile(modelNodeId, directoryPath + "/data/" + modelName + ".scs")
             .then(() => {
             let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
             viewer.model.getNodeRealBounding(modelNodeId)
@@ -195,7 +197,7 @@ class main {
             modelThumbnail.href = "";
             modelThumbnail.className = "model-thumb";
             modelThumbnail.setAttribute("model", modelname);
-            let imgPath = "/additive-manufacturing/data/thumbnails/" + modelname + ".png";
+            let imgPath = directoryPath + "/data/thumbnails/" + modelname + ".png";
             // Check to see if the selected model has a corresponding thumbnail made
             fetch(imgPath)
                 .then((resp) => {
