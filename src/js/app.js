@@ -4,7 +4,7 @@ import printingPlane from "./printingPlane";
 import syncHelper from "./syncHelper";
 import '../css/tutorial-transforms.css';
 
-let directoryPath = "/additive-manufacturing";
+let directoryPath = "../..";
 // Application logic will begin once DOM content is loaded
 window.onload = () => {
     const app = new main();
