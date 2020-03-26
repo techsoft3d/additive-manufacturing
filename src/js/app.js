@@ -110,7 +110,6 @@ class main {
         const nodeName = "Model-" + (modelNum + 1);
         const modelNodeId = viewer.model.createNode(null, nodeName);
         this._modelList.push(modelName);
-        debugger;
         viewer.model.loadSubtreeFromScsFile(modelNodeId, directoryPath + "/data/" + modelName + ".scs")
             .then(() => {
             let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
