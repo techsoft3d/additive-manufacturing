@@ -2,7 +2,7 @@ import instanceOperator from "./instanceOperator";
 import transformOperator from "./transformOperator";
 import printingPlane from "./printingPlane";
 import syncHelper from "./syncHelper";
-import '../css/tutorial-transforms.css';
+
 
 let directoryPath = ".";
 // Application logic will begin once DOM content is loaded
