@@ -22,16 +22,5 @@ Verify you have the latest version of `npm` installed on your machine:
 
 ## Setup and Run
 
-
-This project has been simplified to run without npm/node.
-It can be run using `python3 -m http.server 8080` & accessed at [http://localhost:8080](http://localhost:8080).
-
-
-The following npm instructions still work.
-
-1. Run `npm install` to install and required Node packages
-    * Note: This step must be done at the project root where `package.json` is located
-2. Run `npm run build` to build the TypeScript project using [Webpack](https://webpack.js.org/)
-3. Run `npm run start` to start a local dev server.
-4. Open your browser to [http://localhost:8080](http://localhost:8080) by default
-    * Check the console output of step 2 to verify port number
+1. Run`python3 -m http.server 8080` 
+2. go to [http://localhost:8080](http://localhost:8080) 
