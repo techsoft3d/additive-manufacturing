@@ -1,4 +1,5 @@
-export default class syncHelper {
+
+class syncHelper {
     constructor(viewerList) {
         // Copy the array, so we do not modify the reference values
         let tfViewerList = viewerList.slice(0);
