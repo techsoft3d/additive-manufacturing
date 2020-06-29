@@ -1,8 +1,8 @@
-import instanceOperator from "./instanceOperator";
-import transformOperator from "./transformOperator";
-import printingPlane from "./printingPlane";
-import syncHelper from "./syncHelper";
-import '../css/tutorial-transforms.css';
+// import instanceOperator from "./instanceOperator.js";
+// import transformOperator from "./transformOperator.js";
+// import printingPlane from "./printingPlane.js";
+// import syncHelper from "./syncHelper.js";
+
 
 let directoryPath = ".";
 // Application logic will begin once DOM content is loaded

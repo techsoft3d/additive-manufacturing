@@ -14,13 +14,19 @@
 
 
   <!-- Include the HOOPS web viewer client source -->
-  <script type="text/javascript" src="src/hoops/hoops_web_viewer.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/techsoft3d/hoops-web-viewer@2019.2.1/hoops_web_viewer.js"></script>
+
 
   <!-- Making the viewer globally available for debug purposes -->
-  <script>       var app;     </script>
+  <!-- <script>       var app;     </script> -->
 
-  <!-- Include the Webpack bundled result of our written source code -->
-  <script src="build/bundle.js"></script>
+  <!-- Include the source code -->
+  <script src="./src/js/instanceOperator.js"></script>
+  <script src="./src/js/printingPlane.js"></script>
+  <script src="./src/js/transformOperator.js"></script>
+  <script src="./src/js/syncHelper.js"></script>
+  <link href="./src/css/tutorial-transforms.css" rel="stylesheet">
+  <script type="module" src="./src/js/app.js"></script>
 
   <title>Workflow Tutorial: Additive Manufacturing</title>
   
@@ -32,10 +38,10 @@
   <!-- Header Component w/ TS3D images -->
   <header id="logo-head" class="comp-container">
     <div id="ts3dlogo">
-      <img src="img/ts3d_logo.png" alt="logo" />
+      <img src="./img/ts3d_logo.png" alt="logo" />
     </div>
     <div id="hclogo">
-      <img src="img/hc.png" alt="hcLogo" />
+      <img src="./img/hc.png" alt="hcLogo" />
     </div>
   </header>
 
