@@ -9,7 +9,6 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-
   "author": "Chris Pillion",
   "license": "ISC",
   "devDependencies": {
