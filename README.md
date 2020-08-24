@@ -2,6 +2,8 @@
 
 This repository contains a completed version of TechSoft 3D's [Additive Manufacturing tutorial](https://docs.techsoft3d.com/communicator/latest/build/tutorials/additive-manufacturing/intro.html) for HOOPS Communicator 2020.
 
+See it running live on [github pages](https://techsoft3d.github.io/additive-manufacturing/)
+
 ## Prerequisites
 
 Verify you have the latest version of `npm` installed:
