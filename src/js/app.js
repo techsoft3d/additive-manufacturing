@@ -88,6 +88,8 @@ class main {
         }); // End Callbacks
         // Do not want any interaction in the overhead viewer, so we will disable all operators
         overheadViewer.operatorManager.clear();
+
+        this.setEventListeners();
     } // End main constructor
     // Function to load models and translate them so they are loaded 
     // at the origin and above the printing plane
@@ -106,4 +108,16 @@ class main {
             });
         });
     }
+    setEventListeners() {
+        // We will use the main viewer to gather scene information
+        let mainViewer = this._viewerList[0];
+        document.getElementById("arrange-button").onclick = () => {
+        };
+        document.getElementById("handles-button").onclick = () => {
+        };
+        document.getElementById("instance-button").onclick = () => {
+        };
+        document.getElementById("open-model-button").onclick = () => {
+        };
+    } // End setting event handlers 
 } // End main class  
