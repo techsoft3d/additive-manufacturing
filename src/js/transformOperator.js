@@ -1,5 +1,4 @@
-
-class transformOperator extends Communicator.Operator.HandleOperator {
+export default class transformOperator extends Communicator.Operator.HandleOperator {
     constructor(viewSync) {
         super(viewSync.getMainViewer());
         this._mainViewer = viewSync.getMainViewer();

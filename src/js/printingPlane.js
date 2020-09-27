@@ -1,5 +1,4 @@
-
-class printingPlane {
+export default class printingPlane {
     constructor(viewerInstance, size = 300, depth = 10) {
         this._planeSize = size;
         this._planeDepth = depth;

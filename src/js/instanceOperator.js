@@ -1,5 +1,4 @@
-
-class instanceOperator extends Communicator.Operator.Operator {
+export default class instanceOperator extends Communicator.Operator.Operator {
     constructor(viewSync) {
         super();
         this._viewSync = viewSync;

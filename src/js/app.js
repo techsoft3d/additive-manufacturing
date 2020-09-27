@@ -1,10 +1,8 @@
-// import instanceOperator from "./instanceOperator.js";
-// import transformOperator from "./transformOperator.js";
-// import printingPlane from "./printingPlane.js";
-// import syncHelper from "./syncHelper.js";
-
-
-let directoryPath = ".";
+import instanceOperator from "./instanceOperator";
+import transformOperator from "./transformOperator";
+import printingPlane from "./printingPlane";
+import syncHelper from "./syncHelper";
+import '../css/tutorial-transforms.css';
 // Application logic will begin once DOM content is loaded
 window.onload = () => {
     const app = new main();
@@ -110,7 +108,7 @@ class main {
         const nodeName = "Model-" + (modelNum + 1);
         const modelNodeId = viewer.model.createNode(null, nodeName);
         this._modelList.push(modelName);
-        viewer.model.loadSubtreeFromScsFile(modelNodeId, directoryPath + "/data/" + modelName + ".scs")
+        viewer.model.loadSubtreeFromScsFile(modelNodeId, "/data/" + modelName + ".scs")
             .then(() => {
             let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
             viewer.model.getNodeRealBounding(modelNodeId)
@@ -196,7 +194,7 @@ class main {
             modelThumbnail.href = "";
             modelThumbnail.className = "model-thumb";
             modelThumbnail.setAttribute("model", modelname);
-            let imgPath = directoryPath + "/data/thumbnails/" + modelname + ".png";
+            let imgPath = "/data/thumbnails/" + modelname + ".png";
             // Check to see if the selected model has a corresponding thumbnail made
             fetch(imgPath)
                 .then((resp) => {
