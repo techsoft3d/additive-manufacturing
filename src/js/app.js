@@ -1,6 +1,7 @@
 import '../css/tutorial-transforms.css';
 import printingPlane from "./printingPlane.js";
 import transformOperator from "./transformOperator.js";
+import instanceOperator from "./instanceOperator";
 import syncHelper from "./syncHelper";
 
 // Application logic will begin once DOM content is loaded
@@ -92,6 +93,9 @@ class main {
         }); // End Callbacks
         // Do not want any interaction in the overhead viewer, so we will disable all operators
         overheadViewer.operatorManager.clear();
+        // Create custom operators and register them with the main webviewer
+        this._instanceOp = new instanceOperator(this._viewSync);
+        this._instanceHandle = mainViewer.registerCustomOperator(this._instanceOp);
         this._transformOp = new transformOperator(this._viewSync); 
         this._transformHandle = mainViewer.registerCustomOperator(this._transformOp);
         // Disable Default Handle Operator - overwriting with custom one that inherits its functionality
@@ -142,6 +146,38 @@ class main {
             }
         };
         document.getElementById("instance-button").onclick = () => {
+            // Use the button to push and pop the operator from the operator stack
+            let elem = document.getElementById("instance-button");
+            if (elem.innerHTML === "Instance Part") {
+                // Gather nodes to be instanced
+                let nodeIds = [];
+                const selectionItems = mainViewer.selectionManager.getResults();
+                selectionItems.map((selection) => {
+                    nodeIds.push(selection.getNodeId());
+                });
+                if (selectionItems.length !== 0) {
+                    elem.innerHTML = "Disable Instancing";
+                    this._instanceOp.setNodesToInstance(nodeIds);
+                    // Remove the selection operator from the stack while instancing
+                    mainViewer.operatorManager.push(this._instanceHandle);
+                    mainViewer.operatorManager.remove(Communicator.OperatorId.Select);
+                    mainViewer.selectionManager.setHighlightNodeSelection(false);
+                    mainViewer.selectionManager.setHighlightFaceElementSelection(false);
+                    mainViewer.selectionManager.setPickTolerance(0);
+                }
+                else {
+                    alert("Try Again. Please first select nodes from the model to instance!");
+                }
+            }
+            else {
+                elem.innerHTML = "Instance Part";
+                // Remove the instance operator from the stack and reenable selection and highlighting
+                mainViewer.selectionManager.clear();
+                mainViewer.operatorManager.remove(this._instanceHandle);
+                mainViewer.operatorManager.push(Communicator.OperatorId.Select);
+                mainViewer.selectionManager.setHighlightNodeSelection(true);
+                mainViewer.selectionManager.setHighlightFaceElementSelection(true);
+            }
         };
         document.getElementById("open-model-button").onclick = () => {
         };
