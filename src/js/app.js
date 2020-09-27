@@ -1,5 +1,6 @@
 import '../css/tutorial-transforms.css';
 import printingPlane from "./printingPlane.js";
+import transformOperator from "./transformOperator.js";
 
 // Application logic will begin once DOM content is loaded
 window.onload = () => {
@@ -84,11 +85,15 @@ class main {
                 document.getElementById("model-file-type").innerHTML = Communicator.FileType[modelFileFormat] || "N/A";
                 document.getElementById("node-id").innerHTML = nodeId.toString() || "Unknown";
                 document.getElementById("node-name").innerHTML = mainViewer.model.getNodeName(nodeId) || "Node Name Not Defined";
+                transformOperator.setMatrixText(mainViewer.model.getNodeNetMatrix(nodeId));
             }
         }); // End Callbacks
         // Do not want any interaction in the overhead viewer, so we will disable all operators
         overheadViewer.operatorManager.clear();
-
+        this._transformOp = new transformOperator(mainViewer);
+        this._transformHandle = mainViewer.registerCustomOperator(this._transformOp);
+        // Disable Default Handle Operator - overwriting with custom one that inherits its functionality
+        mainViewer.operatorManager.remove(Communicator.OperatorId.Handle);
         this.setEventListeners();
     } // End main constructor
     // Function to load models and translate them so they are loaded 
@@ -114,6 +119,22 @@ class main {
         document.getElementById("arrange-button").onclick = () => {
         };
         document.getElementById("handles-button").onclick = () => {
+            // Need to gather the selected node IDs to know which nodes
+            // will be affected by the transformation
+            let nodeIds = [];
+            const selectionItems = mainViewer.selectionManager.getResults();
+            selectionItems.map((selectionItem) => {
+                nodeIds.push(selectionItem.getNodeId());
+            });
+            // Ensure the user has made a selection before trying to add handles
+            if (selectionItems.length !== 0) {
+                this._transformOp.addHandles(nodeIds);
+                this._transformOp.showHandles();
+                mainViewer.operatorManager.push(this._transformHandle);
+            }
+            else {
+                alert("Try Again. Please first select nodes from the model to transform!");
+            }
         };
         document.getElementById("instance-button").onclick = () => {
         };
