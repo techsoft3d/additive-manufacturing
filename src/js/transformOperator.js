@@ -1,7 +1,8 @@
 export default class transformOperator extends Communicator.Operator.HandleOperator {
-    constructor(mainViewer) {
-        super(mainViewer);
-        this._mainViewer = mainViewer;
+    constructor(viewSync) {
+        super(viewSync.getMainViewer());
+        this._mainViewer = viewSync.getMainViewer();
+        this._viewSync = viewSync;
     }
     static setMatrixText(matrix) {
         const ids = ['m11', 'm21', 'm31', 'm41',
@@ -19,7 +20,8 @@ export default class transformOperator extends Communicator.Operator.HandleOpera
             let nodeIds = [];
             selectionItems.map((selectionItem) => {
                 nodeIds.push(selectionItem.getNodeId());
-            });            
+            });
+            this._viewSync.syncNodeTransforms(nodeIds);
             transformOperator.setMatrixText(this._mainViewer.model.getNodeNetMatrix(nodeIds[0]));
         }
     }

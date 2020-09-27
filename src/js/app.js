@@ -1,6 +1,7 @@
 import '../css/tutorial-transforms.css';
 import printingPlane from "./printingPlane.js";
 import transformOperator from "./transformOperator.js";
+import syncHelper from "./syncHelper";
 
 // Application logic will begin once DOM content is loaded
 window.onload = () => {
@@ -18,6 +19,7 @@ class main {
             empty: true
         });
         this._viewerList = [mainViewer, overheadViewer];
+        this._viewSync = new syncHelper(this._viewerList);
         this._modelList = [];
         this._printSurfaces = [];
         
@@ -90,7 +92,7 @@ class main {
         }); // End Callbacks
         // Do not want any interaction in the overhead viewer, so we will disable all operators
         overheadViewer.operatorManager.clear();
-        this._transformOp = new transformOperator(mainViewer);
+        this._transformOp = new transformOperator(this._viewSync); 
         this._transformHandle = mainViewer.registerCustomOperator(this._transformOp);
         // Disable Default Handle Operator - overwriting with custom one that inherits its functionality
         mainViewer.operatorManager.remove(Communicator.OperatorId.Handle);
