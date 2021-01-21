@@ -25,7 +25,7 @@ class main {
             viewer.setCallbacks({
                 modelStructureReady: () => {
                     // Create Printing Plane
-                    this._printSurfaces.push(new printingPlane(viewer, 300, 10));
+                    this._printSurfaces.push(new PrintingPlane(viewer, 300, 10));
 
                     // Load Model
                     this.loadModel("microengine", viewer);

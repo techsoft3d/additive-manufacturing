@@ -1,5 +1,5 @@
 
-class transformOperator {
+class TransformOperator {
     constructor() {
 
     }
