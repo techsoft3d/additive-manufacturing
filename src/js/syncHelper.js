@@ -1,4 +1,4 @@
-class syncHelper {
+class SyncHelper {
     constructor() {
         
     }

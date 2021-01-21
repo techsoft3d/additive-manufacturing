@@ -1,5 +1,5 @@
 
-class printingPlane {
+class PrintingPlane {
     constructor() {
 
     }

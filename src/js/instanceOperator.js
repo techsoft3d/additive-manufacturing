@@ -1,5 +1,5 @@
 
-class instanceOperator {
+class InstanceOperator {
     constructor() {
 
     }
