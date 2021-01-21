@@ -5,6 +5,7 @@ window.onload = () => {
 };
 
 class main {
+
     constructor() {
         // Instantiate two viewers for two different views
         const mainViewer = new Communicator.WebViewer({
@@ -98,6 +99,8 @@ class main {
         // Disable interaction with the overhead viewer
         overheadViewer.operatorManager.clear();
 
+        this.setEventListeners();
+
     } // End main constructor
 
 
@@ -118,5 +121,16 @@ class main {
             });
         });
     }
+
+    setEventListeners() {
+        document.getElementById("arrange-button").onclick = () => {
+        };
+        document.getElementById("handles-button").onclick = () => {
+        };
+        document.getElementById("instance-button").onclick = () => {
+        };
+        document.getElementById("open-model-button").onclick = () => {
+        };
+    } // End setting event handlers 
 
 } // End main class 
