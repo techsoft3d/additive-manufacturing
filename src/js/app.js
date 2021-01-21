@@ -17,13 +17,15 @@ class main {
         });
         this._viewerList = [mainViewer, overheadViewer];
         this._modelList = [];
+        this._printSurfaces = [];
 
         this._viewerList.map( (viewer) => {
             viewer.start();
             viewer.setCallbacks({
                 modelStructureReady: () => {
                     // Create Printing Plane
-                    
+                    this._printSurfaces.push(new printingPlane(viewer, 300, 10));
+
                     // Load Model
                     this.loadModel("microengine", viewer);
 
@@ -77,7 +79,16 @@ class main {
         const modelNum = viewer.model.getNodeChildren(viewer.model.getAbsoluteRootNode()).length;
         const nodeName = "Model-" + (modelNum + 1);
         const modelNodeId = viewer.model.createNode(null, nodeName);
-        this._modelList.push(modelName); 
-        viewer.model.loadSubtreeFromScsFile(modelNodeId, "/data/" + modelName + ".scs");
+        this._modelList.push(modelName);
+        viewer.model.loadSubtreeFromScsFile(modelNodeId, "/data/" + modelName + ".scs")
+            .then(() => {
+            let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
+            viewer.model.getNodeRealBounding(modelNodeId)
+                .then((box) => {
+                loadMatrix.setTranslationComponent(box.min.x * -1, box.min.y * -1, box.min.z * -1);
+                viewer.model.setNodeMatrix(modelNodeId, loadMatrix, true);
+            });
+        });
     }
+    
 } // End main class 
