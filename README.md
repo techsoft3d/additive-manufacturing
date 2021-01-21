@@ -1,4 +1,4 @@
-# Additive Manufacturing Template
+# Additive Manufacturing Tutorial Template
 
 This repository contains a starting template of TechSoft 3D's [Additive Manufacturing tutorial](https://docs.techsoft3d.com/communicator/latest/build/tutorials/additive-manufacturing/intro.html) for HOOPS Communicator.
 
