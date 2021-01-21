@@ -64,6 +64,34 @@ class main {
                 mainViewer.view.getAxisTriad().enable();
                 mainViewer.view.getNavCube().enable();
                 mainViewer.view.getNavCube().setAnchor(Communicator.OverlayAnchor.LowerRightCorner);
+            }, 
+            // Adding functionality for a selection callback in the mainViewer
+            selectionArray: (selectionEvents) => {
+                // Do Not Want the Build Plate as a Part of any Model Selection Events
+                const ppNodeId = this._printSurfaces[0].getNodeId(); // Node Id of the build plate
+                
+                // Return the selection IDs for the current selections, check if the printing plane
+                // was selected in the results - if so, remove it
+                const selectionIds = selectionEvents.map(sEvent => sEvent.getSelection().getNodeId());
+                const foundIndex = selectionIds.indexOf(ppNodeId);
+                
+                if (foundIndex != -1) {
+                    mainViewer.selectionManager.remove(selectionEvents[foundIndex].getSelection());
+                    selectionEvents.splice(foundIndex, 1);
+                }
+                
+                // If the printing plane was the only result, no other selections fired
+                // this callback, so exit
+                if (selectionEvents.length == 0)
+                    return;
+
+                const nodeId = selectionEvents[0].getSelection().getNodeId();
+                const modelFileName = mainViewer.model.getModelFileNameFromNode(nodeId);
+                const modelFileFormat = mainViewer.model.getModelFileTypeFromNode(nodeId);
+                document.getElementById("model-file-name").innerHTML = modelFileName || "N/A";
+                document.getElementById("model-file-type").innerHTML = Communicator.FileType[modelFileFormat] || "N/A";
+                document.getElementById("node-id").innerHTML = nodeId.toString() || "Unknown";
+                document.getElementById("node-name").innerHTML = mainViewer.model.getNodeName(nodeId) || "Node Name Not Defined";
             }
         });
 
@@ -90,5 +118,5 @@ class main {
             });
         });
     }
-    
+
 } // End main class 
