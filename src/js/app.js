@@ -93,11 +93,17 @@ class main {
                 document.getElementById("model-file-type").innerHTML = Communicator.FileType[modelFileFormat] || "N/A";
                 document.getElementById("node-id").innerHTML = nodeId.toString() || "Unknown";
                 document.getElementById("node-name").innerHTML = mainViewer.model.getNodeName(nodeId) || "Node Name Not Defined";
+                TransformOperator.setMatrixText(mainViewer.model.getNodeNetMatrix(nodeId));
             }
         });
 
         // Disable interaction with the overhead viewer
         overheadViewer.operatorManager.clear();
+
+        this._transformOp = new TransformOperator(mainViewer);
+        this._transformHandle = mainViewer.registerCustomOperator(this._transformOp);
+        // Disable Default Handle Operator - overwriting with custom one that inherits its functionality
+        mainViewer.operatorManager.remove(Communicator.OperatorId.Handle);
 
         this.setEventListeners();
 
@@ -123,9 +129,27 @@ class main {
     }
 
     setEventListeners() {
+        // We will use the main viewer to gather scene information
+        let mainViewer = this._viewerList[0];
         document.getElementById("arrange-button").onclick = () => {
         };
         document.getElementById("handles-button").onclick = () => {
+            // Need to gather the selected node IDs to know which nodes
+            // will be affected by the transformation
+            let nodeIds = [];
+            const selectionItems = mainViewer.selectionManager.getResults();
+            selectionItems.map((selectionItem) => {
+                nodeIds.push(selectionItem.getNodeId());
+            });
+            // Ensure the user has made a selection before trying to add handles
+            if (selectionItems.length !== 0) {
+                this._transformOp.addHandles(nodeIds);
+                this._transformOp.showHandles();
+                mainViewer.operatorManager.push(this._transformHandle);
+            }
+            else {
+                alert("Try Again. Please first select nodes from the model to transform!");
+            }
         };
         document.getElementById("instance-button").onclick = () => {
         };
