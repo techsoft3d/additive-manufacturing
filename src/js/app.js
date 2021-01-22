@@ -133,6 +133,9 @@ class main {
         // We will use the main viewer to gather scene information
         let mainViewer = this._viewerList[0];
         document.getElementById("arrange-button").onclick = () => {
+            // One plane for each viewer - need to call for each plane
+            this._transformOp.arrangeOnPlane(this._printSurfaces[0].getDimensions().planeSize)
+                .then((results) => this._viewSync.syncNodeTransforms());
         };
         document.getElementById("handles-button").onclick = () => {
             // Need to gather the selected node IDs to know which nodes
