@@ -1,9 +1,10 @@
 
 class TransformOperator extends Communicator.Operator.HandleOperator {
     
-    constructor(mainViewer) {
-        super(mainViewer);
-        this._mainViewer = mainViewer;
+    constructor(viewSync) {
+        super(viewSync.getMainViewer());
+        this._mainViewer = viewSync.getMainViewer();
+        this._viewSync = viewSync;
     }
 
     onMouseMove(event) {
@@ -14,9 +15,11 @@ class TransformOperator extends Communicator.Operator.HandleOperator {
             selectionItems.map((selectionItem) => {
                 nodeIds.push(selectionItem.getNodeId());
             });
-            TransformOperator.setMatrixText(this._mainViewer.model.getNodeNetMatrix(nodeIds[0]));
+            this._viewSync.syncNodeTransforms(nodeIds);
+            transformOperator.setMatrixText(this._mainViewer.model.getNodeNetMatrix(nodeIds[0]));
         }
     }
+    
 
     static setMatrixText(matrix) {
         const ids = 

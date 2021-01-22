@@ -17,6 +17,7 @@ class main {
             empty: true
         });
         this._viewerList = [mainViewer, overheadViewer];
+        this._viewSync = new SyncHelper(this._viewerList);
         this._modelList = [];
         this._printSurfaces = [];
 
@@ -100,7 +101,7 @@ class main {
         // Disable interaction with the overhead viewer
         overheadViewer.operatorManager.clear();
 
-        this._transformOp = new TransformOperator(mainViewer);
+        this._transformOp = new TransformOperator(this._viewSync);
         this._transformHandle = mainViewer.registerCustomOperator(this._transformOp);
         // Disable Default Handle Operator - overwriting with custom one that inherits its functionality
         mainViewer.operatorManager.remove(Communicator.OperatorId.Handle);
