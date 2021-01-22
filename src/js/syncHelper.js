@@ -1,16 +1,17 @@
-export default class syncHelper {
+class SyncHelper {
     constructor(viewerList) {
         // Copy the array, so we do not modify the reference values
         let tfViewerList = viewerList.slice(0);
-        // Assign the first element to the 
+        // Assign the first element to the main viewer
         this._mainViewer = tfViewerList.shift();
         // All remaining viewers are attached
         this._attachedViewers = tfViewerList;
         this._needsUpdate = true;
         this._modelTreeNodes = [];
     }
+
     syncNodeTransforms(nodeIds = []) {
-        if (this._needsUpdate == true) {
+        if (this._needsUpdate) {
             this._modelTreeNodes = [];
             this._gatherAllNodeIds(this._mainViewer.model.getAbsoluteRootNode(), this._modelTreeNodes);
             this._modelTreeNodes = this._modelTreeNodes.filter(Boolean);
@@ -36,9 +37,7 @@ export default class syncHelper {
             }
         }
     }
-    addInstanceNodeId(nodeId) {
-        this._modelTreeNodes.push(nodeId);
-    }
+
     setNeedsUpdate(option) {
         this._needsUpdate = option;
     }

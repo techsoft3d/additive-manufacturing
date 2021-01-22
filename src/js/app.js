@@ -1,37 +1,38 @@
-import instanceOperator from "./instanceOperator";
-import transformOperator from "./transformOperator";
-import printingPlane from "./printingPlane";
-import syncHelper from "./syncHelper";
-import '../css/tutorial-transforms.css';
 // Application logic will begin once DOM content is loaded
 window.onload = () => {
     const app = new main();
 };
+
 class main {
+
     constructor() {
         // Instantiate two viewers for two different views
         const mainViewer = new Communicator.WebViewer({
             containerId: "viewer",
             empty: true
-        })
+        });
         const overheadViewer = new Communicator.WebViewer({
             containerId: "subviewer",
             empty: true
         });
         this._viewerList = [mainViewer, overheadViewer];
+        this._viewSync = new SyncHelper(this._viewerList);
         this._modelList = [];
         this._printSurfaces = [];
-        this._viewSync = new syncHelper(this._viewerList);
-        // By storing in the array, we can initialize both viewers with 
-        // the same code using the array "map" function
-        this._viewerList.map((viewer) => {
+
+        this._viewerList.map( (viewer) => {
             viewer.start();
             viewer.setCallbacks({
                 modelStructureReady: () => {
-                    // Need to make a surface for each viewer
-                    this._printSurfaces.push(new printingPlane(viewer, 300, 10));
-                    // Load the model and pass in the matrix
+                    // Create Printing Plane
+                    this._printSurfaces.push(new PrintingPlane(viewer, 300, 10));
+
+                    // Load Model
                     this.loadModel("microengine", viewer);
+
+                }, 
+                sceneReady: () => {
+                                        
                     // Set the cameras for the two viewers
                     let camPos, target, upVec;
                     switch (viewer) {
@@ -46,40 +47,45 @@ class main {
                             upVec = new Communicator.Point3(0, 1, 0);
                             break;
                         default:
-                            alert('Error: No WebViewer Objects Detected. Report to TS3D.');
+                            alert('Error: No WebViewer Objects Detected.');
                     }
                     const defaultCam = Communicator.Camera.create(camPos, target, upVec, 1, 720, 720, 0.01);
                     viewer.view.setCamera(defaultCam);
+                    
                     // Background color for viewers
                     viewer.view.setBackgroundColor(new Communicator.Color(0, 153, 220), new Communicator.Color(218, 220, 222));
                 }
             }); // End Callbacks on Both Viewers
-        }); // End Map
+        }); // End map
+
         // Set additional callbacks for main viewer only
         mainViewer.setCallbacks({
-            modelStructureReady: () => {
+            sceneReady: () => {
                 // Additional options for modelStructureReady that we did not want in both viewers
                 mainViewer.view.getAxisTriad().enable();
                 mainViewer.view.getNavCube().enable();
                 mainViewer.view.getNavCube().setAnchor(Communicator.OverlayAnchor.LowerRightCorner);
-            },
-            // Adding functionality for a selection callback in the main viewer
+            }, 
+            // Adding functionality for a selection callback in the mainViewer
             selectionArray: (selectionEvents) => {
                 // Do Not Want the Build Plate as a Part of any Model Selection Events
                 const ppNodeId = this._printSurfaces[0].getNodeId(); // Node Id of the build plate
+                
                 // Return the selection IDs for the current selections, check if the printing plane
                 // was selected in the results - if so, remove it
                 const selectionIds = selectionEvents.map(sEvent => sEvent.getSelection().getNodeId());
                 const foundIndex = selectionIds.indexOf(ppNodeId);
+                
                 if (foundIndex != -1) {
                     mainViewer.selectionManager.remove(selectionEvents[foundIndex].getSelection());
                     selectionEvents.splice(foundIndex, 1);
                 }
+                
                 // If the printing plane was the only result, no other selections fired
                 // this callback, so exit
                 if (selectionEvents.length == 0)
                     return;
-                // Otherwise, display node information for the first node in the selection array
+
                 const nodeId = selectionEvents[0].getSelection().getNodeId();
                 const modelFileName = mainViewer.model.getModelFileNameFromNode(nodeId);
                 const modelFileFormat = mainViewer.model.getModelFileTypeFromNode(nodeId);
@@ -87,20 +93,30 @@ class main {
                 document.getElementById("model-file-type").innerHTML = Communicator.FileType[modelFileFormat] || "N/A";
                 document.getElementById("node-id").innerHTML = nodeId.toString() || "Unknown";
                 document.getElementById("node-name").innerHTML = mainViewer.model.getNodeName(nodeId) || "Node Name Not Defined";
-                transformOperator.setMatrixText(mainViewer.model.getNodeNetMatrix(nodeId));
+                TransformOperator.setMatrixText(mainViewer.model.getNodeNetMatrix(nodeId));
             }
-        }); // End Callbacks
-        // Do not want any interaction in the overhead viewer, so we will disable all operators
+        });
+
+        // Disable interaction with the overhead viewer
         overheadViewer.operatorManager.clear();
-        // Disable Default Handle Operator - overwriting with custom one that inherits its functionality
-        mainViewer.operatorManager.remove(Communicator.OperatorId.Handle);
+
         // Create custom operators and register them with the main webviewer
-        this._instanceOp = new instanceOperator(this._viewSync);
+        this._instanceOp = new InstanceOperator(this._viewSync);
         this._instanceHandle = mainViewer.registerCustomOperator(this._instanceOp);
-        this._transformOp = new transformOperator(this._viewSync);
+        this._transformOp = new TransformOperator(this._viewSync);
         this._transformHandle = mainViewer.registerCustomOperator(this._transformOp);
         this.setEventListeners();
-    } // End main Constructor
+        // Disable Default Handle Operator - overwriting with custom one that inherits its functionality
+        mainViewer.operatorManager.remove(Communicator.OperatorId.Handle);
+
+
+        
+
+        this.setEventListeners();
+
+    } // End main constructor
+
+
     // Function to load models and translate them so they are loaded 
     // at the origin and above the printing plane
     loadModel(modelName, viewer) {
@@ -113,12 +129,12 @@ class main {
             let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
             viewer.model.getNodeRealBounding(modelNodeId)
                 .then((box) => {
-                loadMatrix.setTranslationComponent(-box.min.x, -box.min.y, -box.min.z);
+                loadMatrix.setTranslationComponent(box.min.x * -1, box.min.y * -1, box.min.z * -1);
                 viewer.model.setNodeMatrix(modelNodeId, loadMatrix, true);
             });
         });
-        this._viewSync.setNeedsUpdate(true);
     }
+
     setEventListeners() {
         // We will use the main viewer to gather scene information
         let mainViewer = this._viewerList[0];
@@ -187,14 +203,14 @@ class main {
             // Once a file has been selected by the user, use the file information to 
             // gather the associated relevant data like thumbnails
             let fileChoice = e.target.value;
-            let filename = fileChoice.replace(/^.*[\\\/]/, '');
+            let fileName = fileChoice.replace(/^.*[\\\/]/, '');
             let modelThumbnail = document.createElement('a');
-            let modelname = filename.split(".", 1)[0];
-            modelThumbnail.id = modelname;
+            let modelName = fileName.split(".", 1)[0];
+            modelThumbnail.id = modelName;
             modelThumbnail.href = "";
             modelThumbnail.className = "model-thumb";
-            modelThumbnail.setAttribute("model", modelname);
-            let imgPath = "/data/thumbnails/" + modelname + ".png";
+            modelThumbnail.setAttribute("model", modelName);
+            let imgPath = "/data/thumbnails/" + modelName + ".png";
             // Check to see if the selected model has a corresponding thumbnail made
             fetch(imgPath)
                 .then((resp) => {
@@ -204,7 +220,7 @@ class main {
                     modelThumbnail.appendChild(modelImg);
                 }
                 else {
-                    modelThumbnail.innerHTML = modelname;
+                    modelThumbnail.innerHTML = modelName;
                     console.log("No Image for this Model was found.");
                 }
             });
@@ -222,8 +238,8 @@ class main {
                         this.loadModel(modelToLoad, viewer);
                     });
                 };
-            }
-            ;
+            };
         };
     } // End setting event handlers 
+
 } // End main class 

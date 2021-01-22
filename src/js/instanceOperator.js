@@ -1,6 +1,6 @@
-export default class instanceOperator extends Communicator.Operator.Operator {
+
+class InstanceOperator {
     constructor(viewSync) {
-        super();
         this._viewSync = viewSync;
         this._mainViewer = viewSync.getMainViewer();
         this._attachedViewers = viewSync.getAttachedViewers();
@@ -8,54 +8,41 @@ export default class instanceOperator extends Communicator.Operator.Operator {
         this._currentNodes = [];
         this._nodePosZ = 0;
     }
-    setNodesToInstance(nodeIds) {
-        this._currentNodes = this._gatherChildLeafNodes(nodeIds);
-        this._mainViewer.model.getNodesBounding(this._currentNodes).then(box => {
-            this._nodePosZ = box.max.z - box.min.z;
-        });
-    }
+    
     onMouseDown(event) {
         this._ptDown.assign(event.getPosition());
-    }
-    ;
+    };
     onMouseUp(event) {
         const position = event.getPosition();
         if (position.equals(this._ptDown)) {
             this._insertModeMouseUp(position);
         }
-    }
-    ;
+    };
+    onMouseMove(event) { }
+    onMousewheel(event) { }
+    onTouchStart(event) { }
+    onTouchMove(event) { }
+    onTouchEnd(event) { }
+    onKeyDown(event) { }
+    onKeyUp(event) { }
+    onDeactivate() { }
+    onActivate() { }
+    onViewOrientationChange() { }
+    stopInteraction() { }
+
     _insertModeMouseUp(ePosition) {
         const config = new Communicator.PickConfig(Communicator.SelectionMask.Face);
         this._mainViewer.view.pickFromPoint(ePosition, config).then((selectionItem) => {
             if (selectionItem.isEntitySelection() &&
                 this._mainViewer.model.getNodeName(selectionItem.getNodeId()) === "printingPlane") {
-                this._insertGeometry(selectionItem.getPosition());
+                    this._insertGeometry(selectionItem.getPosition());
             }
             else {
                 alert("Please select a point on the Printing Plane");
             }
         });
-    }
-    ;
-    _gatherChildLeafNodes(startNodes) {
-        const model = this._mainViewer.model;
-        let nodes = startNodes.slice();
-        let leaves = [];
-        for (let i = 0; i < nodes.length; ++i) {
-            let node = nodes[i];
-            let kids = model.getNodeChildren(node);
-            if (kids.length === 0) {
-                leaves.push(node);
-            }
-            for (let j = 0; j < kids.length; j++) {
-                let kid = kids[j];
-                nodes.push(kid);
-            }
-        }
-        return leaves;
-    }
-    ;
+    };
+
     _insertGeometry(position) {
         this._mainViewer.model.getMeshIds(this._currentNodes).then(meshIds => {
             meshIds.forEach((meshId, index) => {
@@ -82,6 +69,29 @@ export default class instanceOperator extends Communicator.Operator.Operator {
                 });
             });
         });
+    };
+
+    setNodesToInstance(nodeIds) {
+        this._currentNodes = this._gatherChildLeafNodes(nodeIds);
+        this._mainViewer.model.getNodesBounding(this._currentNodes).then(box => {
+            this._nodePosZ = box.max.z - box.min.z;
+        });
     }
-    ;
+    _gatherChildLeafNodes(startNodes) {
+        const model = this._mainViewer.model;
+        let nodes = startNodes.slice();
+        let leaves = [];
+        for (let i = 0; i < nodes.length; ++i) {
+            let node = nodes[i];
+            let kids = model.getNodeChildren(node);
+            if (kids.length === 0) {
+                leaves.push(node);
+            }
+            for (let j = 0; j < kids.length; j++) {
+                let kid = kids[j];
+                nodes.push(kid);
+            }
+        }
+        return leaves;
+    }
 }
