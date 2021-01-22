@@ -16,7 +16,7 @@ class TransformOperator extends Communicator.Operator.HandleOperator {
                 nodeIds.push(selectionItem.getNodeId());
             });
             this._viewSync.syncNodeTransforms(nodeIds);
-            transformOperator.setMatrixText(this._mainViewer.model.getNodeNetMatrix(nodeIds[0]));
+            TransformOperator.setMatrixText(this._mainViewer.model.getNodeNetMatrix(nodeIds[0]));
         }
     }
     
