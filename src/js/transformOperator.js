@@ -102,5 +102,5 @@ class TransformOperator extends Communicator.Operator.HandleOperator {
           promiseArr.push(this._mainViewer.model.setNodeMatrix(children[i], ident, false));
           this._gatherLeavesAndClearMats(children[i], leafArray, promiseArr);
         }
-      }
+    }
 }
