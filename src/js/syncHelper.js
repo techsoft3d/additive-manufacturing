@@ -6,24 +6,24 @@ class SyncHelper {
         this._mainViewer = tfViewerList.shift();
         // All remaining viewers are attached
         this._attachedViewers = tfViewerList;
-        this._needsUpdate = true;
-        this._modelTreeNodes = [];
+        this._nodeMapping = new Map();
     }
 
     syncNodeTransforms(nodeIds = []) {
-        if (this._needsUpdate) {
-            this._modelTreeNodes = [];
-            this._gatherAllNodeIds(this._mainViewer.model.getAbsoluteRootNode(), this._modelTreeNodes);
-            this._modelTreeNodes = this._modelTreeNodes.filter(Boolean);
-            this._needsUpdate = false;
+        if (nodeIds.length == 0) {
+            nodeIds = [];
+            this._gatherAllNodeIds(this._mainViewer.model.getAbsoluteRootNode(), nodeIds);
+            nodeIds = nodeIds.filter(Boolean);
         }
-        nodeIds = nodeIds.length == 0 ? this._modelTreeNodes : nodeIds;
         let matMap = new Map();
         for (let node of nodeIds) {
             matMap.set(node, this._mainViewer.model.getNodeMatrix(node));
         }
         for (let [node, matrix] of matMap.entries()) {
-            this._attachedViewers.map((viewer) => {
+            this._attachedViewers.map((viewer, index) => {
+                if (this._nodeMapping.has(node)) {
+                    node = this._nodeMapping.get(node)[index];
+                }
                 viewer.model.setNodeMatrix(node, matrix);
             });
         }
@@ -38,15 +38,14 @@ class SyncHelper {
         }
     }
 
-    setNeedsUpdate(option) {
-        this._needsUpdate = option;
+    setNodesMapping(masterNode, mappedNodes) {
+        this._nodeMapping.set(masterNode, mappedNodes);
     }
-    getModelTreeNodes() {
-        return this._modelTreeNodes;
-    }
+
     getMainViewer() {
         return this._mainViewer;
     }
+    
     getAttachedViewers() {
         return this._attachedViewers;
     }
