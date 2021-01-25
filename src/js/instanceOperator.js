@@ -12,35 +12,20 @@ class InstanceOperator {
     onMouseDown(event) {
         this._ptDown.assign(event.getPosition());
     };
+
     onMouseUp(event) {
         const position = event.getPosition();
         if (position.equals(this._ptDown)) {
-            this._insertModeMouseUp(position);
-        }
-    };
-    onMouseMove(event) { }
-    onMousewheel(event) { }
-    onTouchStart(event) { }
-    onTouchMove(event) { }
-    onTouchEnd(event) { }
-    onKeyDown(event) { }
-    onKeyUp(event) { }
-    onDeactivate() { }
-    onActivate() { }
-    onViewOrientationChange() { }
-    stopInteraction() { }
-
-    _insertModeMouseUp(ePosition) {
-        const config = new Communicator.PickConfig(Communicator.SelectionMask.Face);
-        this._mainViewer.view.pickFromPoint(ePosition, config).then((selectionItem) => {
-            if (selectionItem.isEntitySelection() &&
-                this._mainViewer.model.getNodeName(selectionItem.getNodeId()) === "printingPlane") {
-                    this._insertGeometry(selectionItem.getPosition());
-            }
-            else {
-                alert("Please select a point on the Printing Plane");
-            }
-        });
+            const config = new Communicator.PickConfig(Communicator.SelectionMask.Face);
+            this._mainViewer.view.pickFromPoint(position, config).then((selectionItem) => {
+                if (selectionItem.isEntitySelection() &&
+                    this._mainViewer.model.getNodeName(selectionItem.getNodeId()) === "printingPlane") {
+                        this._insertGeometry(selectionItem.getPosition());
+                }
+                else {
+                    alert("Please select a point on the Printing Plane");
+                }
+            });        }
     };
 
     _insertGeometry(position) {
@@ -56,16 +41,17 @@ class InstanceOperator {
                     for (let i = 0; i < numInstances; ++i) {
                         mid.push(new Communicator.MeshInstanceData(meshId, netMatrix, "Node " + this._currentNodes + " Instance", color, Communicator.Color.black()));
                     }
-                    this._mainViewer.model.createMeshInstance(mid.pop())
-                        .then(nodeId => {
-                        this._viewSync.setNeedsUpdate(true);
-                    });
+
+                    let p1 = [this._mainViewer.model.createMeshInstance(mid.pop())];
+                    let p2 = [];
                     this._attachedViewers.map(viewer => {
-                        viewer.model.createMeshInstance(mid.pop())
-                            .then(nodeId => {
-                            this._viewSync.setNeedsUpdate(true);
-                        });
+                        p1.push(viewer.model.createMeshInstance(mid.pop()))
                     });
+                    Promise.all(p1)
+                        .then( (nodeIds) => {
+                            let masterNode = nodeIds.shift()
+                            this._viewSync.setNodesMapping(masterNode, nodeIds);
+                        })
                 });
             });
         });
