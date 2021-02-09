@@ -226,7 +226,7 @@ class main {
             modelThumbnail.href = "";
             modelThumbnail.className = "model-thumb";
             modelThumbnail.setAttribute("model", modelName);
-            let imgPath = "/data/thumbnails/" + modelName + ".png";
+            let imgPath = "./data/thumbnails/" + modelName + ".png";
             // Check to see if the selected model has a corresponding thumbnail made
             fetch(imgPath)
                 .then((resp) => {
