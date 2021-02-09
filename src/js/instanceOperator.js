@@ -1,6 +1,0 @@
-
-class InstanceOperator {
-    constructor() {
-
-    }
-}
