@@ -1,0 +1,6 @@
+
+class PrintingPlane {
+    constructor() {
+
+    }
+}

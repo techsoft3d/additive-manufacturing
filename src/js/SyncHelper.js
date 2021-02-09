@@ -1,0 +1,5 @@
+class SyncHelper {
+    constructor() {
+        
+    }
+}
