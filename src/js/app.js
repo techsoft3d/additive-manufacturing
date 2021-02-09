@@ -1,6 +1,6 @@
 
 window.onload = () => {
-    const app = new main();
+    app = new main();
 };
 
 class main {
