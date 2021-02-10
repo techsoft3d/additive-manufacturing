@@ -12,14 +12,19 @@ class main {
     }  // End Constructor
 
     setEventListeners() {
+
         document.getElementById("arrange-button").onclick = () => {
+        
         };
+
         document.getElementById("handles-button").onclick = () => {
+        
         };
+
         document.getElementById("instance-button").onclick = () => {
+        
         };
-        document.getElementById("open-model-button").onclick = () => {
-        };
+        
     } // End setting event handlers 
 
 } // End main class 

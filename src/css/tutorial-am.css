@@ -64,12 +64,12 @@
 }
 
 #models-scroller {
-  width: 86%;
-  height: 87%;
+  width: 98%;
+  height: 80%;
   position: relative;
-  left: 13%;
+  left: 1%;
   border: 1px solid black;
-  top: 7%;
+  top: 14%;
   border-radius: 5px;
   float: left;
   /* overflow-y: scroll; */
