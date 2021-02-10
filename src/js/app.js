@@ -7,10 +7,17 @@ class main {
 
     constructor() {
         
+        this.setViewerCallbacks();
+
         this.setEventListeners();
 
     }  // End Constructor
 
+
+    setViewerCallbacks() {
+
+    }
+    
     setEventListeners() {
 
         document.getElementById("arrange-button").onclick = () => {
@@ -24,7 +31,7 @@ class main {
         document.getElementById("instance-button").onclick = () => {
         
         };
-        
+
     } // End setting event handlers 
 
 } // End main class 
