@@ -1,5 +1,5 @@
 class PrintingPlane {
-    constructor() {
+    constructor(viewerInstance, size = 300, depth = 10) {
 
     }
 }
