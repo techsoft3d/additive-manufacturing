@@ -15,4 +15,6 @@ Verify you have the latest version of `npm` installed:
 1. Clone the project: `git clone https://github.com/techsoft3d/additive-manufacturing.git`
 2. Navigate to the project folder: `cd additive_manufacturing`
 3. Install dependencies: `npm install` 
-4. Start the development server: `npm run start`
+4. Start the development server: `npm start`
+
+User the `master` branch when starting the tutorial, and checkout the `completed` branch for reference.

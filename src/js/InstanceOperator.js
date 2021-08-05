@@ -1,6 +1,5 @@
-
 class InstanceOperator {
-    constructor() {
+    constructor(viewSync) {
 
     }
 }

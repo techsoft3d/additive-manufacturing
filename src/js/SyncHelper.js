@@ -1,5 +1,5 @@
 class SyncHelper {
-    constructor() {
+    constructor(viewerList) {
         
     }
 }
