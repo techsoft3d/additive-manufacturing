@@ -1,4 +1,3 @@
-
 class InstanceOperator {
     constructor(viewSync) {
         this._viewSync = viewSync;
@@ -11,7 +10,7 @@ class InstanceOperator {
     
     onMouseDown(event) {
         this._ptDown.assign(event.getPosition());
-    };
+    }
 
     onMouseUp(event) {
         const position = event.getPosition();
@@ -25,8 +24,9 @@ class InstanceOperator {
                 else {
                     alert("Please select a point on the Printing Plane");
                 }
-            });        }
-    };
+            });        
+        }
+    }
 
     _insertGeometry(position) {
         this._mainViewer.model.getMeshIds(this._currentNodes).then(meshIds => {
@@ -42,12 +42,11 @@ class InstanceOperator {
                         mid.push(new Communicator.MeshInstanceData(meshId, netMatrix, "Node " + this._currentNodes + " Instance", color, Communicator.Color.black()));
                     }
 
-                    let p1 = [this._mainViewer.model.createMeshInstance(mid.pop())];
-                    let p2 = [];
+                    let meshInstancePromises = [this._mainViewer.model.createMeshInstance(mid.pop())];
                     this._attachedViewers.map(viewer => {
-                        p1.push(viewer.model.createMeshInstance(mid.pop()))
+                        meshInstancePromises.push(viewer.model.createMeshInstance(mid.pop()))
                     });
-                    Promise.all(p1)
+                    Promise.all(meshInstancePromises)
                         .then( (nodeIds) => {
                             let masterNode = nodeIds.shift()
                             this._viewSync.setNodesMapping(masterNode, nodeIds);
@@ -55,7 +54,7 @@ class InstanceOperator {
                 });
             });
         });
-    };
+    }
 
     setNodesToInstance(nodeIds) {
         this._currentNodes = this._gatherChildLeafNodes(nodeIds);

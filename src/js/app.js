@@ -1,3 +1,5 @@
+'use strict';
+
 // Application logic will begin once DOM content is loaded
 window.onload = () => {
     const app = new main();
@@ -15,34 +17,27 @@ class main {
             containerId: "subviewer",
             empty: true
         });
+
+        // Set class properties
         this._viewerList = [mainViewer, overheadViewer];
         this._viewSync = new SyncHelper(this._viewerList);
         this._modelList = [];
         this._printSurfaces = [];
 
-        this._viewerList.map( (viewer) => viewer.start());
+        // Start viewers
+        this._viewerList.map( (viewer) => viewer.start() );
 
-        this.setViewerCallbacks(mainViewer, overheadViewer);
-
-        this.configureOperators(mainViewer, overheadViewer);
-
+        // Set up viewers
+        this.setViewerCallbacks();
+        this.configureOperators();
         this.setEventListeners();
 
     } // End main constructor
 
+    setViewerCallbacks() {
+        let mainViewer = this._viewerList[0];
+        let overheadViewer = this._viewerList[1];
 
-    configureOperators(mainViewer, overheadViewer) {
-
-        // Create custom operators and register them with the main webviewer
-        this._instanceOp = new InstanceOperator(this._viewSync);
-        this._instanceHandle = mainViewer.registerCustomOperator(this._instanceOp);
-
-        // Disable operators in the overhead viewer
-        overheadViewer.operatorManager.clear();
-
-    }
-
-    setViewerCallbacks(mainViewer, overheadViewer) {
         this._viewerList.map((viewer) => {
             viewer.setCallbacks({
 
@@ -52,7 +47,6 @@ class main {
 
                     // Load Model
                     this.loadModel("microengine", viewer);
-
                 },
 
                 sceneReady: () => {
@@ -83,7 +77,6 @@ class main {
             }); // End Callbacks on Both Viewers
         }); // End map
 
-
         // Set additional callbacks for main viewer only
         mainViewer.setCallbacks({
 
@@ -109,7 +102,7 @@ class main {
                     selectionEvents.splice(foundIndex, 1);
                 }
 
-                // If the printing plane was the only result, no other selections fired
+                // If the printing plane was the only result, then no other selections fired
                 // this callback, so exit
                 if (selectionEvents.length == 0)
                     return;
@@ -128,36 +121,31 @@ class main {
                 this.setMatrixText(mainViewer.model.getNodeNetMatrix(nodeIds[0]));
                 this._viewSync.syncNodeTransforms(nodeIds);
             }
-
-        });
+        }); // End Callbacks on main viewer
     }
 
-    // Function to load models and translate them so they are loaded 
-    // at the origin and above the printing plane
-    loadModel(modelName, viewer) {
-        const modelNum = viewer.model.getNodeChildren(viewer.model.getAbsoluteRootNode()).length;
-        const nodeName = "Model-" + (modelNum + 1);
-        const modelNodeId = viewer.model.createNode(null, nodeName);
-        this._modelList.push(modelName);
-        viewer.model.loadSubtreeFromScsFile(modelNodeId, "./data/" + modelName + ".scs")
-            .then(() => {
-            let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
-            viewer.model.getNodeRealBounding(modelNodeId)
-                .then((box) => {
-                loadMatrix.setTranslationComponent(box.min.x * -1, box.min.y * -1, box.min.z * -1);
-                viewer.model.setNodeMatrix(modelNodeId, loadMatrix, true);
-            });
-        });
+    configureOperators() {
+        let mainViewer = this._viewerList[0];
+        let overheadViewer = this._viewerList[1];
+
+        // Create custom operators and register them with the main webviewer
+        this._instanceOp = new InstanceOperator(this._viewSync);
+        this._instanceHandle = mainViewer.registerCustomOperator(this._instanceOp);
+
+        // Disable operators in the overhead viewer
+        overheadViewer.operatorManager.clear();
     }
 
     setEventListeners() {
         // We will use the main viewer to gather scene information
         let mainViewer = this._viewerList[0];
+
         document.getElementById("arrange-button").onclick = () => {
             // One plane for each viewer - need to call for each plane
             this.arrangeOnPlane(this._printSurfaces[0].getDimensions().planeSize)
                 .then((results) => this._viewSync.syncNodeTransforms());
         };
+
         document.getElementById("handles-button").onclick = () => {
             // Need to gather the selected node IDs to know which nodes
             // will be affected by the transformation
@@ -177,6 +165,7 @@ class main {
                 alert("Try Again. Please first select nodes from the model to transform!");
             }
         };
+
         document.getElementById("instance-button").onclick = () => {
             // Use the button to push and pop the operator from the operator stack
             let elem = document.getElementById("instance-button");
@@ -212,7 +201,6 @@ class main {
             }
         };
 
-
         // Now update the event callbacks for the thumbnails
         const thumbnailElements = document.getElementsByClassName("model-thumb");
         for (let thumbnail of thumbnailElements) {
@@ -230,6 +218,23 @@ class main {
         
     } // End setting event handlers 
 
+    // Function to load models and translate them so they are loaded 
+    // at the origin and above the printing plane
+    loadModel(modelName, viewer) {
+        const modelNum = viewer.model.getNodeChildren(viewer.model.getAbsoluteRootNode()).length;
+        const nodeName = "Model-" + (modelNum + 1);
+        const modelNodeId = viewer.model.createNode(null, nodeName);
+        this._modelList.push(modelName);
+        viewer.model.loadSubtreeFromScsFile(modelNodeId, "./data/" + modelName + ".scs")
+            .then(() => {
+            let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
+            viewer.model.getNodeRealBounding(modelNodeId)
+                .then((box) => {
+                loadMatrix.setTranslationComponent(box.min.x * -1, box.min.y * -1, box.min.z * -1);
+                viewer.model.setNodeMatrix(modelNodeId, loadMatrix, true);
+            });
+        });
+    }
 
     setMatrixText(matrix) {
         const ids = 
@@ -244,6 +249,7 @@ class main {
 
     arrangeOnPlane(boundarySize) {
         let mainViewer = this._viewerList[0];
+
         return new Promise((resolve) => {
             let leafArray = [];
             let setEmptyMatsPromises = [];
