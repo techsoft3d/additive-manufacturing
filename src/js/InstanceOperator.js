@@ -35,7 +35,7 @@ class InstanceOperator {
                     let netMatrix = this._mainViewer.model.getNodeNetMatrix(this._currentNodes[index]);
                     netMatrix.m[12] = position.x; // Add translation to the X-axis.
                     netMatrix.m[13] = position.y; // Add translation to the Y-axis.
-                    netMatrix.m[14] = this._nodePosZ;
+                    // netMatrix.m[14] = this._nodePosZ;
                     let mid = [];
                     let numInstances = this._attachedViewers.length + 1;
                     for (let i = 0; i < numInstances; ++i) {

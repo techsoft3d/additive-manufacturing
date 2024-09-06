@@ -46,7 +46,8 @@ class main {
                     this._printSurfaces.push(new PrintingPlane(viewer, 300, 10));
 
                     // Load Model
-                    this.loadModel("microengine", viewer);
+                    // this.loadModel("microengine", viewer);
+                    this.loadModel("57_no_results", viewer);
                 },
 
                 sceneReady: () => {
@@ -108,6 +109,8 @@ class main {
                     return;
 
                 const nodeId = selectionEvents[0].getSelection().getNodeId();
+                console.log(nodeId)
+                console.log(mainViewer.model.getNodeNetMatrix(nodeId))
                 const modelFileName = mainViewer.model.getModelFileNameFromNode(nodeId);
                 const modelFileFormat = mainViewer.model.getModelFileTypeFromNode(nodeId);
                 document.getElementById("model-file-name").innerHTML = modelFileName || "N/A";
@@ -220,6 +223,7 @@ class main {
 
     // Function to load models and translate them so they are loaded 
     // at the origin and above the printing plane
+
     loadModel(modelName, viewer) {
         const modelNum = viewer.model.getNodeChildren(viewer.model.getAbsoluteRootNode()).length;
         const nodeName = "Model-" + (modelNum + 1);
@@ -227,11 +231,31 @@ class main {
         this._modelList.push(modelName);
         viewer.model.loadSubtreeFromScsFile(modelNodeId, "./data/" + modelName + ".scs")
             .then(() => {
-            let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
+            var myArray = [1,
+    0,
+    0,
+    0,
+    0,
+    0.7429093421391111,
+    0.6693920445915332,
+    0,
+    0,
+    -0.6693920445915332,
+    0.7429093421391111,
+    0,
+    91.1111748344115,
+    -0.8723428484745703,
+    0.019076813543319027,
+    1
+]
+                var myMatrix = Communicator.Matrix.createFromArray(myArray);
+                // hwv.model.setNodeMatrix(Number(key), myArray)
+            // let loadMatrix = viewer.model.getNodeNetMatrix(modelNodeId);
+            // console.log(loadMatrix)
             viewer.model.getNodeRealBounding(modelNodeId)
                 .then((box) => {
-                loadMatrix.setTranslationComponent(box.min.x * -1, box.min.y * -1, box.min.z * -1);
-                viewer.model.setNodeMatrix(modelNodeId, loadMatrix, true);
+                    // myMatrix.setTranslationComponent(box.min.x * -1, box.min.y * -1, box.min.z * -1);
+                viewer.model.setNodeMatrix(modelNodeId, myMatrix, true);
             });
         });
     }
