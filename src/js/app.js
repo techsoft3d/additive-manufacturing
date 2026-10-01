@@ -1,5 +1,8 @@
 'use strict';
 
+import '../css/tutorial-am.css';
+import '@ts3d-hoops/web-viewer-components';
+
 // Application logic will begin once DOM content is loaded
 window.onload = () => {
     const app = new main();

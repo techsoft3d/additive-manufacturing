@@ -20,17 +20,6 @@
 
     <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
 
-
-  <!-- Include the HOOPS web viewer client source -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/techsoft3d/hoops-web-viewer@latest/hoops_web_viewer.js"></script>
-
-  <!-- Include the source code -->
-  <script src="./src/js/InstanceOperator.js"></script>
-  <script src="./src/js/PrintingPlane.js"></script>
-  <script src="./src/js/SyncHelper.js"></script>
-  <link href="./src/css/tutorial-am.css" rel="stylesheet">
-  <script type="module" src="./src/js/app.js"></script>
-
   <title>Workflow Tutorial: Additive Manufacturing</title>
 </head>
 
@@ -52,13 +41,21 @@
 
   <!-- Main Viewer Component w/ Interaction -->
   <div id="canvas" class="comp-container">
-    <div id="viewer"></div>
+    <hoops-service-registry>
+      <hoops-web-viewer-context-manager>
+        <hoops-web-viewer id="viewer" enginePath="./engine"></hoops-web-viewer>
+      </hoops-web-viewer-context-manager>
+    </hoops-service-registry>
     <div id="viewer-label" class="comp-label">Main View</div>
   </div>
 
   <!-- Overhead Viewer Component for a Top-Down View -->
   <div id="subcanvas" class="comp-container">
-    <div id="subviewer"></div>
+    <hoops-service-registry>
+      <hoops-web-viewer-context-manager>
+        <hoops-web-viewer id="subviewer" enginePath="./engine"></hoops-web-viewer>
+      </hoops-web-viewer-context-manager>
+    </hoops-service-registry>
     <div id="subviewer-label" class="comp-label">Overhead View</div>
   </div>
 
@@ -152,6 +149,7 @@
     </div>
   </div>
 
+  <script type="module" src="src/js/app.js"></script>
 </body>
 
 </html>
